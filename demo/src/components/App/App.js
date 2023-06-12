@@ -17,6 +17,15 @@ function App() {
   function pause() { videoRef.current.pause(); };
   function setCurrentTime(requiredTime) { videoRef.current.currentTime = requiredTime; };
 
+  const [currentTimestamp, setCurrentTimestamp] = useState('0');
+  
+  const handleTimeUpdate = () => {
+    setCurrentTimestamp(videoRef.current.currentTime);
+  }
+  
+
+
+
   
   // Video Selection
   const [currentPlayingName, setCurrentPlayingName] = useState(videoMetadata[0]); // Name of the video that is being playing
@@ -42,7 +51,6 @@ function App() {
   function videosSelect(videos) {
     return (
       <div>
-        <label>Select a Video</label>
         <select value={currentPlayingName} onChange={handleSelectVideo}>
           <option></option>
           {videos.map((video) =>
@@ -63,7 +71,6 @@ function App() {
   function categoriesSelect(categories) {
     return (
       <div>
-        <label>Object Query</label>
         <select value={currentSelectedCategory} onChange={handleCategorySelect}>
           <option></option>
           {categories.map((category) =>
@@ -101,17 +108,22 @@ function App() {
   
   return (
     <div>
-      <video width="960" height="480" ref={videoRef} controls>
-          <source 
-            src={currentPlaying}
-            type="video/mp4" 
-          />
-      </video>
-      {/* <button onClick={() => play()}>Start</button>
-      <button onClick={() => pause()}>Pause</button> */}
-      {videosSelect(videoMetadata)}
-      {categoriesSelect(currentSearchData.key)}
-      {timestampButtons(searchResult)}
+      <div className='video-window'>
+        <video width="960" height="480" ref={videoRef} onTimeUpdate={handleTimeUpdate} controls>
+            <source 
+              src={currentPlaying}
+              type="video/mp4" 
+            />
+        </video>
+      </div>
+      <div className='control-window'>
+        <h2>Select Video</h2>
+        {videosSelect(videoMetadata)}
+
+        <h2>Object Search</h2>
+        {categoriesSelect(currentSearchData.key)}
+        {timestampButtons(searchResult)}
+      </div>
     </div>
   );
 }

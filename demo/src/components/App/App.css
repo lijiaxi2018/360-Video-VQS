@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
+* {
+  font-family: 'Lato', sans-serif;
+}
+
+.video-window {
+  position: absolute;
+  top: 25px;
+  left: 25px;
+}
+
+.control-window {
+  position: absolute;
+  top: 25px;
+  left: 1025px;
+  height: 460px;
+  width: 480px;
+  padding: 10px;
+  border: 1px solid #b0acad;
+}

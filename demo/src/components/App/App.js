@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import './App.css';
-import { categoryInt2Str, categoryStr2Int } from '../../utils/utils';
+import { categoryInt2Str, categoryStr2Int, categoryInt2Color } from '../../utils/utils';
 
 import { videoMetadata } from "../../assets/videoMetadata";
 
@@ -9,6 +9,11 @@ import nightVideo from "../../assets/videos/v_night.mp4";
 
 import daySearch from "../../assets/inferences/v_day_search_data.json";
 import nightSearch from "../../assets/inferences/v_night_search_data.json";
+
+import dayBB from "../../assets/inferences/v_day_bb_data.json";
+import nightBB from "../../assets/inferences/v_night_bb_data.json";
+
+const FPS = 30;
 
 function App() {
   // Access the DOM element (<video>)
@@ -23,14 +28,11 @@ function App() {
     setCurrentTimestamp(videoRef.current.currentTime);
   }
   
-
-
-
-  
   // Video Selection
   const [currentPlayingName, setCurrentPlayingName] = useState(videoMetadata[0]); // Name of the video that is being playing
   const [currentPlaying, setCurrentPlaying] = useState(dayVideo); // Video that is loaded to the player
   const [currentSearchData, setCurrentSearchData] = useState(daySearch); // Search data that is used
+  const [currentBBData, setCurrentBBData] = useState(dayBB); // Bounding Boxes data that is used
   
   function handleChangeSource(source) {
     setCurrentPlaying(source);
@@ -42,9 +44,11 @@ function App() {
     if (e.target.value === videoMetadata[0]) {
       handleChangeSource(dayVideo);
       setCurrentSearchData(daySearch);
+      setCurrentBBData(dayBB);
     } else if (e.target.value === videoMetadata[1]) {
       handleChangeSource(nightVideo);
       setCurrentSearchData(nightSearch);
+      setCurrentBBData(nightBB);
     }
   }
 
@@ -81,10 +85,34 @@ function App() {
     );
   }
 
+  // Bounding Boxes Selection
+  const [currentBBCode, setCurrentBBCode] = useState(0); // BBs that are selected to render
+
+  const handleSelectBB = (e) => {
+    if (e.target.checked) {
+      setCurrentBBCode(currentBBCode + 2 ** parseInt(e.target.id));
+    } else {
+      setCurrentBBCode(currentBBCode - 2 ** parseInt(e.target.id));
+    }
+  }
+  
+  function bbSelect(categories) {
+    return (
+      <div>
+        {categories.map((category) =>
+            <div key={category}>
+              <input type="checkbox" id={category} onChange={handleSelectBB} />
+              <label>{categoryInt2Str(category)}</label>
+            </div>
+          )}
+      </div>
+    );
+  }
+
   // Fetching Search Results
   function fetchTimestamps(category, searchData) {
     if (!(categoryStr2Int(category) in searchData)) {
-      return []
+      return [];
     } else {
       return searchData[categoryStr2Int(category)];
     }
@@ -99,17 +127,74 @@ function App() {
     return (
       <div>
         {timestamps.map((timestamp) =>
-          <button key={timestamp} onClick={() => setCurrentTime(timestamp)}>{timestamp}</button>
+          <button className='jump-button' key={timestamp} onClick={() => setCurrentTime(timestamp)}>{timestamp}</button>
         )}
       </div>
     );
   }
+
+  // Fetch BB Results
+  function fetchBBs(timestamp, bbData, categoriesCode) {
+    if (bbData === undefined) {
+      return [];
+    } else {
+      let correctedTimestamp = (Math.floor(timestamp * FPS) >= bbData["num_frames"]) ? (bbData["num_frames"] - 1) : (Math.floor(timestamp * FPS));
+      let currentAllBBs = bbData[correctedTimestamp];
+      
+      let currentSelectedBBs = [];
+      for (let i = 0; i < currentAllBBs.length; i++) {
+        let categoryInt = parseInt(currentAllBBs[i][0]);
+        if ((categoriesCode >> categoryInt) % 2 === 1) {
+          currentSelectedBBs.push(currentAllBBs[i]);
+        }
+      }
+
+      return currentSelectedBBs;
+    }
+  }
+
+  // Canvas Initialization
+  const canvas = useRef();
+
+  // Draw Bounding Boxes
+  const drawBB = () => {
+    const currentBBs = fetchBBs(currentTimestamp, currentBBData, currentBBCode);
+
+    canvas.current.width = canvas.current.clientWidth;
+    canvas.current.height = canvas.current.clientHeight;
+    const context = canvas.current.getContext('2d');
+    
+    for (let i = 0; i < currentBBs.length; i++) {
+      let x = currentBBs[i][1];
+      let y = currentBBs[i][2];
+      let w = currentBBs[i][3];
+      let h = currentBBs[i][4];
+      let categoryText = categoryInt2Str(currentBBs[i][0]);
+      let categoryColor = categoryInt2Color(currentBBs[i][0]);
+
+      context.beginPath();
+      context.strokeStyle = categoryColor;
+      context.lineWidth = 2;
+      context.rect(x, y, w, h);
+
+      context.font = 'bold 12pt Arial';
+      context.fillStyle = categoryColor;
+      context.fillText(categoryText, x, y);
+      context.stroke();
+    }
+  }
+
+  // Drawing
+  useEffect(() => {
+    drawBB();
+  });
   
   
   return (
     <div>
+      <canvas className='canvas-window' ref={canvas}></canvas>
       <div className='video-window'>
-        <video width="960" height="480" ref={videoRef} onTimeUpdate={handleTimeUpdate} controls>
+        <video width="960" height="480" ref={videoRef} onTimeUpdate={handleTimeUpdate}>
             <source 
               src={currentPlaying}
               type="video/mp4" 
@@ -117,12 +202,25 @@ function App() {
         </video>
       </div>
       <div className='control-window'>
-        <h2>Select Video</h2>
+        <p className='general-font-medium'>Video Controller</p>
+        <button className='general-button' onClick={() => play()}>Start</button>
+        <button className='general-button' onClick={() => pause()}>Pause</button>
+
+        <div style={{ 'marginTop': '20px' }}></div>
+
+        <p className='general-font-medium'>Select Video</p>
         {videosSelect(videoMetadata)}
 
-        <h2>Object Search</h2>
+        <div style={{ 'marginTop': '20px' }}></div>
+
+        <p className='general-font-medium'>Object Search</p>
         {categoriesSelect(currentSearchData.key)}
         {timestampButtons(searchResult)}
+
+        <div style={{ 'marginTop': '20px' }}></div>
+
+        <p className='general-font-medium'>Render Bounding Boxes</p>
+        {bbSelect(currentSearchData.key)}
       </div>
     </div>
   );

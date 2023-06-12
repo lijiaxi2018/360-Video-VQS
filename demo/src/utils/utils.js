@@ -71,3 +71,40 @@ export function categoryStr2Int(category) {
       return '';
   }
 }
+
+export function categoryInt2Color(category) {
+  switch(category) {
+    case 1:
+      return '#e6194B'
+    
+    case 2:
+      return '#9A6324'
+    
+    case 3:
+      return '#808000'
+    
+    case 4:
+      return '#469990'
+    
+    case 5:
+      return '#000075'
+    
+    case 6:
+      return '#800000'
+      
+    case 7:
+      return '#f58231'
+    
+    case 8:
+      return '#ffe119'
+    
+    case 9:
+      return '#bfef45'
+    
+    case 10:
+      return '#3cb44b'
+    
+    default:
+      return '#000000';
+  }
+}

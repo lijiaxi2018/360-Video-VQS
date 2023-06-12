@@ -15,13 +15,6 @@ def getAllTexts(path):
             texts_filenames.append(f)
     return texts_filenames
 
-# def frames_to_timestamps(frames, tps=5):
-#     timestamps = set()
-#     for f in frames:
-#         timestamps.add(round( math.floor( f / (FPS / tps) ) * (1 / tps), 2 ))
-    
-#     return sorted(list(timestamps))
-
 def record_frame(bb_data, index, file_path):
     f = open(file_path, "r")
     lines = f.readlines()

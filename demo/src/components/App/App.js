@@ -6,12 +6,15 @@ import { videoMetadata } from "../../assets/videoMetadata";
 
 import dayVideo from "../../assets/videos/v_day.mp4";
 import nightVideo from "../../assets/videos/v_night.mp4";
+import indoorVideo from "../../assets/videos/v_indoor.mp4";
 
 import daySearch from "../../assets/inferences/v_day_search_data.json";
 import nightSearch from "../../assets/inferences/v_night_search_data.json";
+import indoorSearch from "../../assets/inferences/v_indoor_search_data.json";
 
 import dayBB from "../../assets/inferences/v_day_bb_data.json";
 import nightBB from "../../assets/inferences/v_night_bb_data.json";
+import indoorBB from "../../assets/inferences/v_indoor_bb_data.json";
 
 const FPS = 30;
 
@@ -49,6 +52,10 @@ function App() {
       handleChangeSource(nightVideo);
       setCurrentSearchData(nightSearch);
       setCurrentBBData(nightBB);
+    } else if (e.target.value === videoMetadata[2]) {
+      handleChangeSource(indoorVideo);
+      setCurrentSearchData(indoorSearch);
+      setCurrentBBData(indoorBB);
     }
   }
 
@@ -213,14 +220,14 @@ function App() {
 
         <div style={{ 'marginTop': '20px' }}></div>
 
-        <p className='general-font-medium'>Object Search</p>
-        {categoriesSelect(currentSearchData.key)}
-        {timestampButtons(searchResult)}
+        <p className='general-font-medium'>Render Bounding Boxes</p>
+        {bbSelect(currentSearchData.key)}
 
         <div style={{ 'marginTop': '20px' }}></div>
 
-        <p className='general-font-medium'>Render Bounding Boxes</p>
-        {bbSelect(currentSearchData.key)}
+        <p className='general-font-medium'>Object Search</p>
+        {categoriesSelect(currentSearchData.key)}
+        {timestampButtons(searchResult)}
       </div>
     </div>
   );

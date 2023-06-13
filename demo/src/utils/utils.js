@@ -30,6 +30,36 @@ export function categoryInt2Str(category) {
     case 10:
       return 'Firefighter Helmet'
     
+    case 11:
+      return 'Structural Damage'
+    
+    case 12:
+      return 'Civilian Car'
+    
+    case 13:
+      return 'Trees'
+    
+    case 14:
+      return 'Water Hose'
+    
+    case 15:
+      return 'Building'
+    
+    case 16:
+      return 'Fence'
+      
+    case 17:
+      return 'Stairs'
+    
+    case 18:
+      return 'Water'
+    
+    case 19:
+      return 'Firefighter Mask'
+    
+    case 20:
+      return 'Smoke'
+    
     default:
       return '';
   }
@@ -66,6 +96,36 @@ export function categoryStr2Int(category) {
     
     case 'Firefighter Helmet':
       return 10;
+    
+    case 'Structural Damage':
+      return 11;
+    
+    case 'Civilian Car':
+      return 12;
+    
+    case 'Trees':
+      return 13;
+    
+    case 'Water Hose':
+      return 14;
+    
+    case 'Building':
+      return 15;
+    
+    case 'Fence':
+      return 16;
+      
+    case 'Stairs':
+      return 17;
+    
+    case 'Water':
+      return 18;
+    
+    case 'Firefighter Mask':
+      return 19;
+    
+    case 'Smoke':
+      return 20;
     
     default:
       return '';
@@ -104,6 +164,36 @@ export function categoryInt2Color(category) {
     case 10:
       return '#3cb44b'
     
+    case 11:
+      return '#42d4f4'
+    
+    case 12:
+      return '#4363d8'
+    
+    case 13:
+      return '#911eb4'
+    
+    case 14:
+      return '#f032e6'
+    
+    case 15:
+      return '#a9a9a9'
+
+    case 16:
+      return '#fabed4'
+      
+    case 17:
+      return '#ffd8b1'
+    
+    case 18:
+      return '#fffac8'
+    
+    case 19:
+      return '#aaffc3'
+    
+    case 20:
+      return '#dcbeff'
+
     default:
       return '#000000';
   }

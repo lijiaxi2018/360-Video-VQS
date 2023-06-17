@@ -60,6 +60,21 @@ export function categoryInt2Str(category) {
     case 20:
       return 'Smoke'
     
+    case 21:
+      return 'Breaking Door'
+    
+    case 22:
+      return 'Climbing Ladder'
+    
+    case 23:
+      return 'Driving'
+    
+    case 24:
+      return 'Dressing Firefighter'
+    
+    case 25:
+      return 'Carrying Body'
+    
     default:
       return '';
   }
@@ -127,6 +142,21 @@ export function categoryStr2Int(category) {
     case 'Smoke':
       return 20;
     
+    case 'Breaking Door':
+      return 21;
+    
+    case 'Climbing Ladder':
+      return 22;
+    
+    case 'Driving':
+      return 23;
+    
+    case 'Dressing Firefighter':
+      return 24;
+    
+    case 'Carrying Body':
+      return 25;
+    
     default:
       return '';
   }
@@ -193,6 +223,21 @@ export function categoryInt2Color(category) {
     
     case 20:
       return '#dcbeff'
+    
+    case 21:
+      return '#fcff5d'
+    
+    case 22:
+      return '#7dfc00'
+    
+    case 23:
+      return '#8ad8e8'
+    
+    case 24:
+      return '#3750db'
+    
+    case 25:
+      return '#c56133'
 
     default:
       return '#000000';

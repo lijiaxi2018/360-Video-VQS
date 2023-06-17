@@ -7,14 +7,26 @@ import { videoMetadata } from "../../assets/videoMetadata";
 import dayVideo from "../../assets/videos/v_day.mp4";
 import nightVideo from "../../assets/videos/v_night.mp4";
 import indoorVideo from "../../assets/videos/v_indoor.mp4";
+import dayClimbBreak from "../../assets/videos/v_day_climb_break.mp4";
+import dayClimbCarry from "../../assets/videos/v_day_climb_carry.mp4";
+import dayDoorBreak from "../../assets/videos/v_day_door_break.mp4";
+import nightClimbBody from "../../assets/videos/v_night_climb_body.mp4";
 
 import daySearch from "../../assets/inferences/v_day_search_data.json";
 import nightSearch from "../../assets/inferences/v_night_search_data.json";
 import indoorSearch from "../../assets/inferences/v_indoor_search_data.json";
+import dayClimbBreakSearch from "../../assets/inferences/v_day_climb_break_search_data.json";
+import dayClimbCarrySearch from "../../assets/inferences/v_day_climb_carry_search_data.json";
+import dayDoorBreakSearch from "../../assets/inferences/v_day_door_break_search_data.json";
+import nightClimbBodySearch from "../../assets/inferences/v_night_climb_body_search_data.json";
 
 import dayBB from "../../assets/inferences/v_day_bb_data.json";
 import nightBB from "../../assets/inferences/v_night_bb_data.json";
 import indoorBB from "../../assets/inferences/v_indoor_bb_data.json";
+import dayClimbBreakBB from "../../assets/inferences/v_day_climb_break_bb_data.json";
+import dayClimbCarryBB from "../../assets/inferences/v_day_climb_carry_bb_data.json";
+import dayDoorBreakBB from "../../assets/inferences/v_day_door_break_bb_data.json";
+import nightClimbBodyBB from "../../assets/inferences/v_night_climb_body_bb_data.json";
 
 const FPS = 30;
 
@@ -23,6 +35,8 @@ function App() {
   const videoRef = React.useRef(null);
   function play() { videoRef.current.play(); };
   function pause() { videoRef.current.pause(); };
+  function increaseVolume() { videoRef.current.volume = Math.min(1, videoRef.current.volume + 0.1) };
+  function decreaseVolume() { videoRef.current.volume = Math.max(0, videoRef.current.volume - 0.1) };
   function setCurrentTime(requiredTime) { videoRef.current.currentTime = requiredTime; };
 
   const [currentTimestamp, setCurrentTimestamp] = useState('0');
@@ -56,6 +70,22 @@ function App() {
       handleChangeSource(indoorVideo);
       setCurrentSearchData(indoorSearch);
       setCurrentBBData(indoorBB);
+    } else if (e.target.value === videoMetadata[3]) {
+      handleChangeSource(dayClimbBreak);
+      setCurrentSearchData(dayClimbBreakSearch);
+      setCurrentBBData(dayClimbBreakBB);
+    } else if (e.target.value === videoMetadata[4]) {
+      handleChangeSource(dayClimbCarry);
+      setCurrentSearchData(dayClimbCarrySearch);
+      setCurrentBBData(dayClimbCarryBB);
+    } else if (e.target.value === videoMetadata[5]) {
+      handleChangeSource(dayDoorBreak);
+      setCurrentSearchData(dayDoorBreakSearch);
+      setCurrentBBData(dayDoorBreakBB);
+    } else if (e.target.value === videoMetadata[6]) {
+      handleChangeSource(nightClimbBody);
+      setCurrentSearchData(nightClimbBodySearch);
+      setCurrentBBData(nightClimbBodyBB);
     }
   }
 
@@ -133,6 +163,11 @@ function App() {
   function timestampButtons (timestamps) {
     return (
       <div>
+        { timestamps.length > 0 &&
+          <div>
+            <label style={{'color' : 'red'}}>Found {timestamps.length} occurrences of {currentSelectedCategory}</label><br/>
+          </div>
+        }
         {timestamps.map((timestamp) =>
           <button className='jump-button' key={timestamp} onClick={() => setCurrentTime(timestamp)}>{timestamp}</button>
         )}
@@ -212,6 +247,8 @@ function App() {
         <p className='general-font-medium'>Video Controller</p>
         <button className='general-button' onClick={() => play()}>Start</button>
         <button className='general-button' onClick={() => pause()}>Pause</button>
+        <button className='general-button' onClick={() => increaseVolume()}>Volume+</button>
+        <button className='general-button' onClick={() => decreaseVolume()}>Volume-</button>
 
         <div style={{ 'marginTop': '20px' }}></div>
 
@@ -220,12 +257,12 @@ function App() {
 
         <div style={{ 'marginTop': '20px' }}></div>
 
-        <p className='general-font-medium'>Render Bounding Boxes</p>
+        <p className='general-font-medium'>Labeling Object & Event</p>
         {bbSelect(currentSearchData.key)}
 
         <div style={{ 'marginTop': '20px' }}></div>
 
-        <p className='general-font-medium'>Object Search</p>
+        <p className='general-font-medium'>Object & Event Search</p>
         {categoriesSelect(currentSearchData.key)}
         {timestampButtons(searchResult)}
       </div>

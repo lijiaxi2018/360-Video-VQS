@@ -257,12 +257,12 @@ function App() {
 
         <div style={{ 'marginTop': '20px' }}></div>
 
-        <p className='general-font-medium'>Labeling Object & Event</p>
+        <p className='general-font-medium'>Labeling Object & Action</p>
         {bbSelect(currentSearchData.key)}
 
         <div style={{ 'marginTop': '20px' }}></div>
 
-        <p className='general-font-medium'>Object & Event Search</p>
+        <p className='general-font-medium'>Object & Action Search</p>
         {categoriesSelect(currentSearchData.key)}
         {timestampButtons(searchResult)}
       </div>
